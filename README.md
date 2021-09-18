@@ -13,7 +13,8 @@
 - Browser: Firefox
 - Browser Theme : [Firefox-Red&Black](https://addons.mozilla.org/en-US/firefox/addon/redandblacktheme/)
 - Bar: Polybar
-- Music: [Spotify](https://www.spotify.com/us/download/linux/) with [cava](https://github.com/karlstav/cava), [rofi-beats](https://github.com/Carbon-Bl4ck/Rofi-Beats)
+- Music: [Spotify](https://www.spotify.com/us/download/linux/) and [rofi-beats](https://github.com/Carbon-Bl4ck/Rofi-Beats)
+- Audio-Visualizer: [cava](https://github.com/karlstav/cava) and [Vis](https://github.com/dpayne/cli-visualizer)
 - Matrix: cmatrix
 - App Launcher: rofi
 - Compositor: [Compton](https://github.com/chjj/compton)
