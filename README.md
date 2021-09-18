@@ -1,7 +1,8 @@
 # Spidey
 
 
-<img src="https://raw.githubusercontent.com/naitik27/Spidey/master/dotfiles/screenshots/1.png" alt="img" align="center">
+![Spidey](https://raw.githubusercontent.com/naitik27/Spidey/master/dotfiles/screenshots/Spidey.gif)
+
 
 ## info 
 
