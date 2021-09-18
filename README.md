@@ -17,5 +17,7 @@
 - App Launcher: rofi
 - Compositor: [Compton](https://github.com/chjj/compton)
 - Clock: tty-clock
-- Wallpaper: 
+- Wallpaper: [Spidey](https://github.com/naitik27/Spidey/tree/main/dotfiles/wallpaper)
 - Wifi-menu: [Rofi-wifi-menu](https://github.com/zbaylin/rofi-wifi-menu)
+- Spotify-player: [Spotify-rise](https://github.com/gcushen/spotify-rise)
+- Spotify-theme: [Spicetify](https://github.com/naitik27/Spidey/tree/main/dotfiles/spicetify-cli/Themes/SpicetifyDefault)
