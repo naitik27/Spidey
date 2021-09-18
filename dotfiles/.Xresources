@@ -1,0 +1,82 @@
+urxvt.scrollBar: false
+!urxvt.transparent: true
+!urxvt.shading: 20
+
+!urxvt.tintColor: #471717
+!urxvt.inheritPixmap: true
+urxvt.depth: 32
+
+! Restore Ctrl+Shift+(c|v)
+urxvt.keysym.Shift-Control-V: eval:paste_clipboard
+urxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+urxvt.iso14755: false
+urxvt.iso14755_52: false
+
+!Fonts
+
+urxvt.font: xft:Hack:pixelsize=17,style=regular
+urxvt.boldFont: xft:Hack:pixelsize=17,style=bold
+urxvt.letterSpace: 0
+
+Xft.dpi: 96	
+Xft.antialias: true
+!Xft.rbga: none
+Xft.hintstyle: hintfull
+Xft.hinting: true
+
+*.internalBorder: 13
+
+
+! special
+!urxvt.foreground:   #placeholder
+!doesnt work because urxvt.transparent and tintcolor
+
+! special
+!*.foreground:   #ffffff
+!*.foreground: #ff9999
+*.foreground: #f48a8a
+
+!HOLY SHIT IT WORKS
+!*.background:   [75]#471717
+*.background: [75]#450b0b
+*.cursorColor:  #f48a8a
+
+
+
+
+! 1
+*.color0:       #af5959
+*.color8:       #993333
+
+! 2
+*.color1:       #c67575
+*.color9:       #cc6666
+
+! 3 - Green 
+*.color2:	#ffffff
+!	Name modifier
+*.color10:      #ffffff
+
+! 4 -
+*.color3:       #e56b6b
+
+*.color11:      #e56b6b
+
+
+! 5 -
+*.color4:       #ff7272
+!FOLDERS
+*.color12:      #ff7272
+
+
+! 6 - 
+*.color5:       #ff7c7c
+*.color13:      #ff7c7c
+
+! cyan
+*.color6:       #ff7c7c
+*.color14:      #ff7c7c
+
+! white (directory thing in username header)
+*.color7:       #ffffff
+*.color15:      #ffffff
