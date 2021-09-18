@@ -25,3 +25,8 @@
 - System-Monitor: Htop
 - Pipes: [Pipes](https://github.com/pipeseroni/pipes.sh)
 - Fetch: Neofetch
+
+
+
+
+- Main rice Template: [Succulent](https://github.com/snickerton/DotfilesSucculent)
