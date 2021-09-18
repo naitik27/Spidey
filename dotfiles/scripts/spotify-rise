@@ -1,0 +1,143 @@
+#!/bin/bash
+#
+# Spotify Rise: Alarm Clock for Spotify Linux Client
+# https://github.com/gcushen/spotify-rise
+#
+# Copyright 2014-2016 George Cushen
+# License: MIT
+#
+###################################################################
+
+readonly VERSION=0.3.0
+
+# Default Spotify track URI to play.
+uri_default="spotify:track:5ytTh89FP1FkmnmZT6tB6f"
+
+# Alarm will automatically stop after `alarm_timeout` minutes if user has not already stopped alarm.
+declare -i alarm_timeout=15
+
+# Toggle shuffle mode when script starts?
+# Useful if Spotify is usually in an un-shuffled state, but you wish to vary the alarm song.
+shuffle_toggle=false
+
+# Is Spotify expected to be in shuffle mode? (Based on state it is left in and shuffle_toggle setting above.)
+shuffle_mode=false
+
+###################################################################
+
+function help {
+  cat <<END_HELP
+Usage: $1 [-t] [-s] [-c <minutes>] [-h] <track-uri>
+  -t		toggle shuffle mode
+  -s		expect that Spotify is already in shuffle mode
+  -c <minutes>	override default alarm timeout
+  -h		this help
+END_HELP
+}
+
+# Attempt to bring Spotify to front using wmctrl.
+function spotify_focus {
+    if [ "$(wmctrl -l | grep "Spotify Premium - Linux Preview" >/dev/null && echo 1)" == 1 ]; then
+        wmctrl -a "Spotify Premium - Linux Preview" >/dev/null
+    elif [ "$(wmctrl -l | grep "Spotify - Linux Preview" >/dev/null && echo 1)" == 1 ]; then
+        wmctrl -a "Spotify - Linux Preview" >/dev/null
+    elif [ "$(wmctrl -l | grep "Spotify" >/dev/null && echo 1)" == 1 ]; then
+        wmctrl -F -a "Spotify" >/dev/null
+    fi
+}
+
+###################################################################
+
+echo "Spotify Rise v$VERSION (https://github.com/gcushen/spotify-rise)"
+
+# Check for required apps.
+cmd_array=( spotify qdbus pacmd xte )
+for i in "${cmd_array[@]}"; do
+    command -v $i >/dev/null 2>&1 || { echo >&2 "I require $i but it's not installed. Aborting."; exit 1; }
+done
+
+# Process arguments.
+while getopts ':c:hst' opt; do
+    case $opt in
+        c ) declare -i alarm_timeout=${OPTARG} ;;
+        s ) shuffle_mode=true ;;
+        t ) shuffle_toggle=true ;;
+        h ) help $0
+            exit 0;;
+        \?) printf "Invalid option: -$OPTARG, try $0 -h\n" >&2
+            exit 1;;
+        : ) printf "Option -$OPTARG requires an argument, try $0 -h\n" >&2
+            exit 1;;
+    esac
+done
+
+# Get URI argument.
+shift $((OPTIND-1))
+[ "$1" = "--" ] && shift
+if [[ "$@" == "" ]]; then
+    uri=$uri_default
+else
+    uri=$@
+fi
+
+# If toggle shuffle mode, then assume we are toggling it on.
+[ ${shuffle_toggle} == true ] && shuffle_mode=true;
+
+now=$(date +"%d-%m-%Y %T")
+echo "Alarm starting at $now and will automatically timeout in $alarm_timeout minutes."
+echo "Wakey! Wakey! Good morning :D"
+
+# Wait for Spotify to launch.
+if [ "$(pgrep -x spotify 1>/dev/null 2>&1 && echo 1)" != 1 ]; then
+    spotify 1>/dev/null 2>&1 &
+    for (( i=0; i<50; i++ )); do
+        # Ignore any stderr messages about process not available yet.
+        metadata=`qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.Player Metadata 2>/dev/null`
+        [[ $metadata ]] && break
+        sleep 0.25
+    done
+fi
+sleep 5
+
+# Fade in alarm song using Pulse Audio.
+stream_id=$(pacmd list-sink-inputs | sed -e '/index:/b' -e '/application.name/b' -e d | sed -n '/application.name = "Spotify"/{g;1!p;};h' | sed 's/index: //;s/^[ \t]*//')
+volume=0
+{
+    for ((volume = 0; volume <= 65536; volume += 3250)); do
+        pacmd set-sink-input-volume "$stream_id" "$volume" >/dev/null
+        sleep 2
+    done
+} &
+
+# Set initial state as paused. "Spotify" only appears in window title when no song playing and this window title is used for toggling shuffle mode.
+qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
+sleep 0.25
+
+# Toggle shuffle mode if desired.
+if [ ${shuffle_toggle} == true ]; then
+    spotify_focus
+    sleep 0.5
+    xte 'keydown Control_R' 'key s' 'keyup Control_R'
+fi
+
+# Open track URI and auto-play track.
+qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri $uri
+
+# If in shuffle mode, start playing a random song from the parent album.
+[ ${shuffle_mode} == true ] && sleep 0.25 && qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+
+# Alarm timeout.
+if (( alarm_timeout > 0 )); then
+    sleep $(( alarm_timeout * 60 ))
+
+    qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
+
+    # Toggle shuffle mode back off if it was previously toggled on by the script.
+    if [ ${shuffle_toggle} == true ]; then
+        spotify_focus
+        sleep 0.5
+        xte 'keydown Control_R' 'key s' 'keyup Control_R'
+    fi
+
+    killall spotify
+fi
