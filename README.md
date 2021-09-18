@@ -21,3 +21,6 @@
 - Wifi-menu: [Rofi-wifi-menu](https://github.com/zbaylin/rofi-wifi-menu)
 - Spotify-player: [Spotify-rise](https://github.com/gcushen/spotify-rise)
 - Spotify-theme: [Spicetify](https://github.com/naitik27/Spidey/tree/main/dotfiles/spicetify-cli/Themes/SpicetifyDefault)
+- System-Monitor: Htop
+- Pipes: [Pipes](https://github.com/pipeseroni/pipes.sh)
+- Fetch: Neofetch
