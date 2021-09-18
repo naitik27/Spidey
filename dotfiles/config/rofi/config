@@ -1,0 +1,17 @@
+! ------------------------------------------------------------------------------
+! ROFI Color theme
+! ------------------------------------------------------------------------------
+rofi.color-enabled: true
+#		   			Window	  	  Border	 	 Separator
+rofi.color-window: #B0754343, #D0754343, #D0754343
+
+#		  Background	  Foreground	 Alt Background Highlight Bg   Highlight Fg
+rofi.color-normal: #5e0000, #FFda9d9d, #00834848, #A04f2c2c, #D0da9d9d
+rofi.color-active: #5e0000, #D0754343, #00834848, #A04f2c2c, #D0754343
+rofi.color-urgent: #5e0000, #D0b9524e, #00834848, #A04f2c2c, #D0b9524e
+
+
+
+
+rofi.font: MonacoB 14
+rofi.hide-scrollbar: true
